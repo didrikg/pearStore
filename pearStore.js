@@ -46,6 +46,9 @@ if (Meteor.isClient) {
       event.target.prodName.value = "";
       event.target.price.value = "";
     },
+    "click .delete": function() {
+      Meteor.call("clearDB");
+    }
   });
 
   Template.product.events({
@@ -90,6 +93,9 @@ Meteor.methods({
   },
   addDelivery: function(qty, productName, cityName) {
     // TODO
+  },
+  clearDB: function() {
+    Products.remove({});
   }
 
 });
