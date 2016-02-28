@@ -1,14 +1,109 @@
 <head>
-  <title>pearStore</title>
+	<title>Pearstore - The amazingly great inventory application</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+	<nav class="navbar navbar-default">
+    	<div class="container-fluid">
+		    <div class="navbar-header">
+      			<a class="navbar-brand" href="#">Brand</a>
+    		</div>
+    		<!--<ul class="nav navbar-nav navbar-right">
+      			<li>{{> pearLogin}}</li>
+    		</ul>-->
+  		</div>
+	</nav>
 
-  {{> hello}}
+
+  	
+  	<div class="container">
+      <div class="jumbotron">
+  	  		<h1>Welcome to Pearstore!</h1>
+  	  		<p>The one stop shop for inventories</p>
+      </div>
+
+      <ul class="list-group">
+        {{#each products}}
+          {{> product}}
+        {{/each}}
+        <li class="list-group-item"><form class="add-product form-inline" role="form">
+          <div class="form-group">
+            <label class="sr-only" for="prodNum">Product Number:</label>
+            <input type="text" name="prodNum" placeholder="Product Number" />
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="prodName">Product Name:</label>
+            <input type="text" name="prodName" placeholder="Product Name" />
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="price">Price:</label>
+            <input type="text" name="price" placeholder="Price" />
+          </div>
+          <button type="submit" class="btn btn-default">Add new product</button>
+        </form>
+        </li>
+      </ul>
+
+	</div>
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="pearLogin">
+  	{{#if currentUser}}
+    	<li class="dropdown">
+  	  		<a href class="dropdown-toggle" data-toggle="dropdown">
+  				{{currentUser.login}} <span class="caret"></span>
+  	 		</a>
+  	  		<ul class="dropdown-menu">
+  				<li>
+  					<a href="" data-action="logout">Logout</a>
+  				</li>
+  	  		</ul>
+    	</li>
+  	{{else}}
+  		{{#if loggingIn}}
+  	  		<li class="active">
+  	    		<a href>
+  	    			Logging in...
+  	    		</a>
+  	  		</li>
+  		{{else}}
+  			<li class="active">
+  	        	<a href data-action="login">
+  	    			User Login
+  	        	</a>
+  	    	</li>
+  		{{/if}}
+	{{/if}}
 </template>
+
+<template name="product">
+  <li class="list-group-item">{{formatDate registeredAt}} - <strong>{{productName}}</strong> - {{price}}kr
+    <ul class="list-group">
+        {{#each inventory}}
+          {{> inventory}}
+        {{/each}}
+        <li class="list-group-item">
+          <form class="add-inventory form-inline" role="form">
+           <div class="form-group">
+            <label class="sr-only" for="city">City:</label>
+            <input type="text" name="city" placeholder="City" />
+           </div>
+           <div class="form-group">
+            <label class="sr-only" for="stock">Starting inventory:</label>
+            <input type="text" name="stock" placeholder="Starting inventory" />
+           </div>
+           <button type="submit" class="btn btn-default">Add new inventory</button>
+          </form>
+        </li>
+      </ul>
+  </li>
+</template>
+
+<template name="inventory">
+  <li class="list-group-item"><strong>{{city}}</strong> - {{stock}}</li>
+</template>
+
+<template name="chartArea">
+
+</template>
+
