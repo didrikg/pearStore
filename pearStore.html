@@ -10,9 +10,7 @@
     </div>
     <ul class="nav navbar-nav navbar-right">
      {{> loginButtons}}
-      			<!--<li>{{> pearLogin}}</li>
-            <a href class="delete pull-right"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-          -->
+      <!--<a href class="populate-db">Populate</a>-->
     </ul>
    </div>
   </nav>
@@ -48,7 +46,7 @@
       </div>
     </div>
     {{#if currentUser}}
-    <div class="row">
+    <div class="row delform">
       <div class="col-md-8 col-md-offset-2">
         <form class="add-delivery form-inline" role="form">
           <select name="product" class="product-selected">
@@ -59,7 +57,7 @@
           </select>
           <select name="city">
             <option value="" disabled selected>Choose a city...</option>
-            {{#each inventories}}
+            {{#each optionInventories}}
               <option value="{{city}}">{{city}} - {{stock}}</option>
             {{/each}}
           </select>
@@ -69,6 +67,43 @@
       </div>
     </div>
     {{/if}}
+
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+             <th>Product Number</th>
+             <th>Product Name</th>
+             <th>Price</th>
+           </tr>
+          </thead>
+          <tbody>
+          {{#each products}}
+          {{> product}}
+          {{/each}} 
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-6">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+             <th>Product</th>
+             <th>City</th>
+             <th>Stock</th>
+           </tr>
+          </thead>
+          <tbody>
+          {{#each inventories}}
+          {{> inventory}}
+          {{/each}} 
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </body>
 
@@ -84,9 +119,36 @@
   </tr>
 </template>
 
+<template name="product">
+  <tr>
+    <td>{{productNumber}}</td>
+    <td>{{productName}}</td>
+    <td>{{price}}</td>
+    <!--{{#if currentUser}}
+    <td><a href class="delete-product"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+    {{/if}}-->
+  </tr>
+</template>
+
+<template name="inventory">
+  <tr>
+    <td>{{product}}</td>
+    <td>{{city}}</td>
+    <td>{{stock}}</td>
+    <!--{{#if currentUser}}
+    <td><a href class="delete-inventory"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+    {{/if}}-->
+  </tr>
+</template>
+
 <template name="chartArea">
   <div>
     <canvas id="mainChart"></canvas>
+    <div id="mainChartLegend">
+      <div class="legend1"></div> - jTelefon 
+      <div class="legend2"></div> - jPlatta 
+      <div class="legend3"></div> - Päronklocka 
+    </div>
   </div>
 </template>
 

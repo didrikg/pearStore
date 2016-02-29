@@ -38,12 +38,15 @@ if (Meteor.isClient) {
     deliveries: function () {
       return Deliveries.find({}, {sort: {registeredAt: 1}});
     },
-    inventories: function () {
+    optionInventories: function () {
       if (Session.get("currentProduct") !== null) {
         return Inventories.find({ product: Session.get("currentProduct") });
       } else {
         //return Inventories.find();
       }
+    },
+    inventories: function () {
+      return Inventories.find({}, {sort: {product: -1}});
     }
   });
 
@@ -79,6 +82,8 @@ if (Meteor.isClient) {
 
       // Clear form
       event.target.amount.value = "";
+
+      drawChart();
     },
     "submit .add-inventory": function(event) {
       // Prevent default browser form submit
@@ -101,8 +106,12 @@ if (Meteor.isClient) {
       var newValue = currentTarget.options[currentTarget.selectedIndex].value;
       Session.set("currentProduct", newValue);
     },
+    "click .populate-db": function() {
+      Meteor.call("populateDatabase");
+    },
     "click .delete-delivery": function() {
       Meteor.call("deleteDelivery", this._id);
+      drawChart();
     },
     "click .delete-product": function() {
       Meteor.call("deleteProduct", this._id);
@@ -113,6 +122,15 @@ if (Meteor.isClient) {
   });
 
   function drawChart(){
+    var jTelefonInventory = parseInt(Inventories.findOne({ product: "jTelefon", city: "Cupertino" }).stock)
+                          + parseInt(Inventories.findOne({product: "jTelefon", city: "Norrköping"}).stock)
+                          + parseInt(Inventories.findOne({product: "jTelefon", city: "Frankfurt"}).stock);
+    var jPlattaInventory = parseInt(Inventories.findOne({product: "jPlatta", city: "Cupertino"}).stock)
+                          + parseInt(Inventories.findOne({product: "jPlatta", city: "Norrköping"}).stock)
+                          + parseInt(Inventories.findOne({product: "jPlatta", city: "Frankfurt"}).stock);
+    var paronklockaInventory = parseInt(Inventories.findOne({product: "Päronklocka", city: "Cupertino"}).stock)
+                          + parseInt(Inventories.findOne({product: "Päronklocka", city: "Norrköping"}).stock)
+                          + parseInt(Inventories.findOne({product: "Päronklocka", city: "Frankfurt"}).stock);
     var data = {
       labels: [ "January", "February", "March" ],
       datasets: [
@@ -124,7 +142,7 @@ if (Meteor.isClient) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(200,0,0,1)",
-            data: [181700, 331700, 326700]              
+            data: [181700, 331700, jTelefonInventory]              
           },
           {
             label: "jPlatta",
@@ -134,7 +152,7 @@ if (Meteor.isClient) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)",
-            data: [203200, 218200, 218200]
+            data: [203200, 218200, jPlattaInventory]
           },
           {
             label: "P&auml;ronklocka",
@@ -144,23 +162,21 @@ if (Meteor.isClient) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(75,150,0,1)",
-            data: [138000, 133000, 153000]
+            data: [138000, 133000, paronklockaInventory]
           }
       ] 
     };
     var ctx = $("#mainChart").get(0).getContext("2d");
-    var myMainChart = new Chart(ctx);
-    new Chart(ctx).Line(data, {
+    var myMainChart = new Chart(ctx).Line(data, {
           responsive: true,
-          legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
     });
   }
 
   Template.chartArea.rendered = function(){
-    drawChart();
+     drawChart();
   };
 
-  Tracker.autorun(myMainChart.update());
+  Tracker.autorun(myMainChart.drawChart());
 }
 
 if (Meteor.isServer) {
@@ -226,7 +242,67 @@ Meteor.methods({
   },
   deleteInventory: function(id) {
     Inventories.remove({_id:id});
-  }
+  },
+  populateDatabase: function() {
+    Deliveries.insert({
+        registeredAt: new Date(2016, 0, 22),
+        product: "jTelefon",
+        city: "Frankfurt",
+        amount: 100000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 0, 23),
+        product: "Päronklocka",
+        city: "Norrköping",
+        amount: -5000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 0, 23),
+        product: "jTelefon",
+        city: "Norrköping",
+        amount: 50000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 0, 24),
+        product: "jPlatta",
+        city: "Cupertino",
+        amount: 40000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 0, 25),
+        product: "jPlatta",
+        city: "Cupertino",
+        amount: -25000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 1, 26),
+        product: "jTelefon",
+        city: "Norrköping",
+        amount: -50000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 1, 26),
+        product: "Päronklocka",
+        city: "Frankfurt",
+        amount: 20000
+      });
+    Deliveries.insert({
+        registeredAt: new Date(2016, 1, 27),
+        product: "jTelefon",
+        city: "Cupertino",
+        amount: 45000
+      });
+      Inventories.update({ product : "jTelefon", city : "Cupertino" }, { $set : { stock : 170000 }});
+      Inventories.update({ product : "jTelefon", city : "Norrköping" }, { $set : { stock : 55000 }});
+      Inventories.update({ product : "jTelefon", city : "Frankfurt" }, { $set : { stock : 101700 }});
+      Inventories.update({ product : "jPlatta", city : "Cupertino" }, { $set : { stock : 41500 }});
+      Inventories.update({ product : "jPlatta", city : "Norrköping" }, { $set : { stock : 104300 }});
+      Inventories.update({ product : "jPlatta", city : "Frankfurt" }, { $set : { stock : 72400 }});
+      Inventories.update({ product : "Päronklocka", city : "Cupertino" }, { $set : { stock : 90000 }});
+      Inventories.update({ product : "Päronklocka", city : "Norrköping" }, { $set : { stock : 38000 }});
+      Inventories.update({ product : "Päronklocka", city : "Frankfurt" }, { $set : { stock : 25000 }});
+  },
+
   /*calculateTotalStock: function(product, city) {
     Products.aggregate([
     ]);

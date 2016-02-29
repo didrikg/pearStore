@@ -1,1 +1,26 @@
 /* CSS declarations go here */
+
+.delform {
+	margin-bottom: 25px;
+}
+
+.legend1 {
+	display: inline-block;
+	width:10px;
+    height:10px;
+    background:rgb(200, 0, 0);
+}
+
+.legend2 {
+	display: inline-block;
+	width:10px;
+    height:10px;
+    background:rgb(0,75,150);
+}
+
+.legend3 {
+	display: inline-block;
+	width:10px;
+    height:10px;
+    background:rgb(75,150,0);
+}
