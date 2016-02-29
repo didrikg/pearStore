@@ -4,109 +4,89 @@
 
 <body>
 	<nav class="navbar navbar-default">
-    	<div class="container-fluid">
-		    <div class="navbar-header">
-      			<a class="navbar-brand" href="#">Brand</a>
-    		</div>
-    		<ul class="nav navbar-nav navbar-right">
+   <div class="container-fluid">
+    <div class="navbar-header">
+     <a class="navbar-brand" href="#"><img src="/img/pearLogo.png" height="27px" /></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+     {{> loginButtons}}
       			<!--<li>{{> pearLogin}}</li>
-            <a href class="delete pull-right"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>-->
-    		</ul>
-  		</div>
-	</nav>
+            <a href class="delete pull-right"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+          -->
+    </ul>
+   </div>
+  </nav>
 
+  <div class="container">
 
-  	
-  	<div class="container">
-      <div class="jumbotron">
-  	  		<h1>Welcome to Pearstore!</h1>
-  	  		<p>The one stop shop for inventories</p>
+    <div class="jumbotron">
+      <h1>Welcome to Pearstore!</h1>
+      <p>The one stop shop for inventories</p>
+    </div>
+
+    <div class="well">
+      {{> chartArea}}
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+             <th>Date</th>
+             <th>Product</th>
+             <th>City</th>
+             <th>Amount</th>
+           </tr>
+          </thead>
+          <tbody>
+          {{#each deliveries}}
+          {{> delivery}}
+          {{/each}} 
+          </tbody>
+        </table>
       </div>
-
-      <ul class="list-group">
-        {{#each products}}
-          {{> product}}
-        {{/each}}
-        <!--<li class="list-group-item"><form class="add-product form-inline" role="form">
-          <div class="form-group">
-            <label class="sr-only" for="prodNum">Product Number:</label>
-            <input type="text" name="prodNum" placeholder="Product Number" />
-          </div>
-          <div class="form-group">
-            <label class="sr-only" for="prodName">Product Name:</label>
-            <input type="text" name="prodName" placeholder="Product Name" />
-          </div>
-          <div class="form-group">
-            <label class="sr-only" for="price">Price:</label>
-            <input type="text" name="price" placeholder="Price" />
-          </div>
-          <button type="submit" class="btn btn-default">Add new product</button>
+    </div>
+    {{#if currentUser}}
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <form class="add-delivery form-inline" role="form">
+          <select name="product" class="product-selected">
+            <option value="" disabled selected>Choose a product...</option>
+            {{#each products}}
+              <option value="{{productName}}">{{productName}}</option>
+            {{/each}}
+          </select>
+          <select name="city">
+            <option value="" disabled selected>Choose a city...</option>
+            {{#each inventories}}
+              <option value="{{city}}">{{city}} - {{stock}}</option>
+            {{/each}}
+          </select>
+          <input type="text" name="amount" placeholder="Fill in the amount" />
+          <button type="submit" class="btn btn-default">Send away!</button>
         </form>
-        </li>-->
-      </ul>
-
-	</div>
+      </div>
+    </div>
+    {{/if}}
+  </div>
 </body>
 
-<template name="pearLogin">
-  	{{#if currentUser}}
-    	<li class="dropdown">
-  	  		<a href class="dropdown-toggle" data-toggle="dropdown">
-  				{{currentUser.login}} <span class="caret"></span>
-  	 		</a>
-  	  		<ul class="dropdown-menu">
-  				<li>
-  					<a href="" data-action="logout">Logout</a>
-  				</li>
-  	  		</ul>
-    	</li>
-  	{{else}}
-  		{{#if loggingIn}}
-  	  		<li class="active">
-  	    		<a href>
-  	    			Logging in...
-  	    		</a>
-  	  		</li>
-  		{{else}}
-  			<li class="active">
-  	        	<a href data-action="login">
-  	    			User Login
-  	        	</a>
-  	    	</li>
-  		{{/if}}
-	{{/if}}
-</template>
-
-<template name="product">
-  <li class="list-group-item">{{formatDate registeredAt}} - <strong>{{productName}}</strong> - {{price}}kr
-    <ul class="list-group">
-        {{#each inventory}}
-          {{> inventory}}
-        {{/each}}
-        <!--<li class="list-group-item">
-          <form class="add-inventory form-inline" role="form">
-           <div class="form-group">
-            <label class="sr-only" for="city">City:</label>
-            <input type="text" name="city" placeholder="City" />
-           </div>
-           <div class="form-group">
-            <label class="sr-only" for="stock">Starting inventory:</label>
-            <input type="text" name="stock" placeholder="Starting inventory" />
-           </div>
-           <button type="submit" class="btn btn-default">Add new inventory</button>
-          </form>
-        </li>-->
-      </ul>
-  </li>
-</template>
-
-<template name="inventory">
-  <li class="list-group-item"><strong>{{city}}</strong> - {{stock}} 
-
-  </li>
+<template name="delivery">
+  <tr>
+    <td>{{formatDate registeredAt}}</td>
+    <td>{{product}}</td>
+    <td>{{city}}</td>
+    <td>{{amount}}</td>
+    {{#if currentUser}}
+    <td><a href class="delete-delivery"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+    {{/if}}
+  </tr>
 </template>
 
 <template name="chartArea">
-
+  <div>
+    <canvas id="mainChart"></canvas>
+  </div>
 </template>
 

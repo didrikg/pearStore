@@ -18,6 +18,6 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 twbs:bootstrap
 accounts-password
-accounts-base
 chart:chart
 momentjs:moment
+ian:accounts-ui-bootstrap-3
