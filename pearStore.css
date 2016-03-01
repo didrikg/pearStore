@@ -4,6 +4,10 @@
 	margin-bottom: 25px;
 }
 
+nav.navbar, div.navbar-header, ul.navbar-right, li.dropdown, a.dropdown-toggle {
+    height: 75px;
+}
+
 .legend1 {
 	display: inline-block;
 	width:10px;

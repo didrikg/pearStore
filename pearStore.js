@@ -122,7 +122,7 @@ if (Meteor.isClient) {
   });
 
   function drawChart(){
-    var jTelefonInventory = parseInt(Inventories.findOne({ product: "jTelefon", city: "Cupertino" }).stock)
+    /*var jTelefonInventory = parseInt(Inventories.findOne({ product: "jTelefon", city: "Cupertino" }).stock)
                           + parseInt(Inventories.findOne({product: "jTelefon", city: "Norrköping"}).stock)
                           + parseInt(Inventories.findOne({product: "jTelefon", city: "Frankfurt"}).stock);
     var jPlattaInventory = parseInt(Inventories.findOne({product: "jPlatta", city: "Cupertino"}).stock)
@@ -130,7 +130,10 @@ if (Meteor.isClient) {
                           + parseInt(Inventories.findOne({product: "jPlatta", city: "Frankfurt"}).stock);
     var paronklockaInventory = parseInt(Inventories.findOne({product: "Päronklocka", city: "Cupertino"}).stock)
                           + parseInt(Inventories.findOne({product: "Päronklocka", city: "Norrköping"}).stock)
-                          + parseInt(Inventories.findOne({product: "Päronklocka", city: "Frankfurt"}).stock);
+                          + parseInt(Inventories.findOne({product: "Päronklocka", city: "Frankfurt"}).stock);*/
+    var jTelefonInventory = 170000 + 55000 + 101700;
+    var jPlattaInventory = 41500 + 104300 + 72400;
+    var paronklockaInventory = 90000 + 38000 + 25000;
     var data = {
       labels: [ "January", "February", "March" ],
       datasets: [
@@ -173,7 +176,7 @@ if (Meteor.isClient) {
   }
 
   Template.chartArea.rendered = function(){
-     drawChart();
+      drawChart();
   };
 
   Tracker.autorun(myMainChart.drawChart());
